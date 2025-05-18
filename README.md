@@ -1,5 +1,14 @@
 # tmux-code-time
 
+## Features
+
+- The purpose of this plugin is to show how long you worked on a project
+- This could be useful to invoice a client
+
+- Add a command to stop the timer for a session and restart it (maybe auto restart it)
+-> This is usefull when locking your laptop and you don't want to track time
+-> don't know technically how to do it
+
 ## Usefull commands
 ```
 
@@ -18,22 +27,17 @@ if [[ -n "$TMUX_PANE" ]]; then
 fi
 ```
 
-Create a timer:
+## Check if the laptop is locked (need to dive into this)
 ```
-SECONDS=0
+#!/bin/bash
 
-if (( $SECONDS > 3600 )) ; then
-    let "hours=SECONDS/3600"
-    let "minutes=(SECONDS%3600)/60"
-    let "seconds=(SECONDS%3600)%60"
-    echo "Completed in $hours hour(s), $minutes minute(s) and $seconds second(s)" 
-elif (( $SECONDS > 60 )) ; then
-    let "minutes=(SECONDS%3600)/60"
-    let "seconds=(SECONDS%3600)%60"
-    echo "Completed in $minutes minute(s) and $seconds second(s)"
-else
-    echo "Completed in $SECONDS seconds"
-fi
+while read line 
+do
+    case "$line" in
+        *"{'LockedHint': <true>}"*) ./session_logger.sh true;;
+        *"{'LockedHint': <false>}"*) ./session_logger.sh false;;
+    esac
+done < <(gdbus monitor -y -d org.freedesktop.login1)
 
 ```
 

@@ -1,3 +1,5 @@
+#! /bin/bash
+
 SECONDS=0
 
 
@@ -8,17 +10,24 @@ SECONDS=0
 # ...
 # When a tmux session is openned, the SECONDS variable is set to the number sat in the storage
 # If a new session is created, the SECONDS variable is set to 0 and the storage is updated
+# Or (this one might be even better because it seems to not depend on the version of tmux)
+
+if [[ -n "$TMUX_PANE" ]]; then
+    tmux display -p '#{session_name}'
+    sleep 61
+fi
+
+let "hours=(SECONDS/3600)%24"
+let "minutes=(SECONDS%3600)/60"
+let "seconds=(SECONDS%3600)%60"
 
 # This code should be called at all time (to display it in the tmux status bar)
 if (( $SECONDS > 3600 )) ; then
-    let "hours=SECONDS/3600"
-    let "minutes=(SECONDS%3600)/60"
-    let "seconds=(SECONDS%3600)%60"
-    echo "Completed in $hours hour(s), $minutes minute(s) and $seconds second(s)" 
+    tmux_timer="${hours}h ${minutes}m ${seconds}s"
 elif (( $SECONDS > 60 )) ; then
-    let "minutes=(SECONDS%3600)/60"
-    let "seconds=(SECONDS%3600)%60"
-    echo "Completed in $minutes minute(s) and $seconds second(s)"
+    tmux_timer="${minutes}m ${seconds}s"
 else
-    echo "Completed in $SECONDS seconds"
+    tmux_timer="${SECONDS}s"
 fi
+
+echo "tmux-timer: $tmux_timer"

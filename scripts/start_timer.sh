@@ -1,20 +1,24 @@
 #! /bin/bash
 
-SECONDS=0
-
-
-# Exec code here
 # SECONDS should be stored for each session
 # 1: 123
 # 2: 456
 # ...
 # When a tmux session is openned, the SECONDS variable is set to the number sat in the storage
 # If a new session is created, the SECONDS variable is set to 0 and the storage is updated
-# Or (this one might be even better because it seems to not depend on the version of tmux)
 
 if [[ -n "$TMUX_PANE" ]]; then
-    tmux display -p '#{session_name}'
-    sleep 61
+    # For the moment, this count is taken from a single file -> only one session can be handled
+    SECONDS=$(cat /tmp/tmux-timer 2>/dev/null || echo 0)
+
+    base_session_name=$(tmux display -p '#{session_attached}')
+
+
+    while [[ "$base_session_name" == "$(tmux display -p '#{session_attached}')" ]]; do
+        sleep 1
+    done
+
+    echo "$SECONDS" > /tmp/tmux-timer
 fi
 
 let "hours=(SECONDS/3600)%24"
@@ -30,4 +34,7 @@ else
     tmux_timer="${SECONDS}s"
 fi
 
+# Variable to make available
 echo "tmux-timer: $tmux_timer"
+
+

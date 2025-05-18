@@ -41,9 +41,11 @@ done < <(gdbus monitor -y -d org.freedesktop.login1)
 
 ```
 
-How to create a tmux plugin
+## How to save the time; check https://github.com/tmux-plugins/tmux-resurrect/tree/master
+## Check on https://github.com/tmux-plugins/tmux-battery to understand how to init something that can be displayed in the status bar
+
+## How to create a tmux plugin
 https://github.com/tmux-plugins/tpm/blob/master/docs/how_to_create_plugin.md
 https://github.com/tmux-plugins/tmux-example-plugin ++++++++++
 
 
-Check on https://github.com/tmux-plugins/tmux-battery to understand how to init something that can be displayed in the status bar

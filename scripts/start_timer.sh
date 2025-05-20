@@ -1,24 +1,32 @@
 #! /bin/bash
 
-# SECONDS should be stored for each session
-# 1: 123
-# 2: 456
-# ...
-# When a tmux session is openned, the SECONDS variable is set to the number sat in the storage
-# If a new session is created, the SECONDS variable is set to 0 and the storage is updated
+storage_file="$HOME/.tmux/tmux-timer.txt"
+
+# Make sure the storage file exists
+# touch "$storage_file"
 
 if [[ -n "$TMUX_PANE" ]]; then
-    # For the moment, this count is taken from a single file -> only one session can be handled
-    SECONDS=$(cat /tmp/tmux-timer 2>/dev/null || echo 0)
+    is_session_visible=$(tmux display -p '#{session_attached}')
 
-    base_session_name=$(tmux display -p '#{session_attached}')
+    session_name=$(tmux display -p '#{session_name}')
+    SECONDS=$(grep "^$session_name=" "$storage_file" | cut -d'=' -f2)
 
+    if [[ -z "$SECONDS" ]]; then
+      SECONDS=0
+    fi
 
-    while [[ "$base_session_name" == "$(tmux display -p '#{session_attached}')" ]]; do
+    # This while loop is used to check if the session has changed
+    while [[ "$is_session_visible" == "$(tmux display -p '#{session_attached}')" ]]; do
         sleep 1
     done
 
-    echo "$SECONDS" > /tmp/tmux-timer
+    # Store the session name and the time in the storage file
+    if grep -q "^$session_name=" "$storage_file"; then
+      sed -i "s/^$session_name=.*/$session_name=$SECONDS/" "$storage_file"
+    else
+      echo "$session_name=$SECONDS" >> "$storage_file"
+    fi
+
 fi
 
 let "hours=(SECONDS/3600)%24"

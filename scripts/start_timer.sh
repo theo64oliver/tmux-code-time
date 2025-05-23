@@ -3,7 +3,7 @@
 storage_file="$HOME/.tmux/tmux-timer.txt"
 
 # Make sure the storage file exists
-# touch "$storage_file"
+touch "$storage_file"
 
 if [[ -n "$TMUX_PANE" ]]; then
     is_session_visible=$(tmux display -p '#{session_attached}')

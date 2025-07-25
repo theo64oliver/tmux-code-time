@@ -1,16 +1,9 @@
 #!/usr/bin/env bash
 
-run_script_when_openning_session()
-{
-  tmux set-hook -g client-session-changed "run-shell '$HOME/Desktop/pers/tmux-code-time/scripts/start_timer.sh'"
-  tmux set-hook -g session-created "run-shell '$HOME/Desktop/pers/tmux-code-time/scripts/start_timer.sh'"
+CURRENT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 
-}
+# Log file to test if script is triggered
+LOG="$CURRENT_DIR/hook_log.txt"
 
-
-main()
-{
-  run_script_when_openning_session
-}
-
-main
+tmux set-hook -g client-session-changed "run-shell '$CURRENT_DIR/scripts/start_timer.sh'"
+tmux set-hook -g session-created "run-shell '$CURRENT_DIR/scripts/start_timer.sh'"

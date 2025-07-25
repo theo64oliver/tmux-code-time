@@ -1,12 +1,16 @@
-#! /bin/bash
+#!/usr/bin/env bash
 
-storage_file="$HOME/.tmux/tmux-timer.txt"
-
+storage_file="./tmux-timer.txt"
 # Make sure the storage file exists
 touch "$storage_file"
 
-if [[ -n "$TMUX_PANE" ]]; then
-    is_session_visible=$(tmux display -p '#{session_attached}')
+LOG_FILE="./tmux-code-time-debug.log"
+
+if [[ -n "$TMUX" ]]; then
+
+    echo "[$(date)] STARTING TIMER for session $(tmux display-message -p '#S')" >> "$LOG_FILE"
+
+    visible_session_name=$(tmux display-message -p '#S')
 
     session_name=$(tmux display -p '#{session_name}')
     SECONDS=$(grep "^$session_name=" "$storage_file" | cut -d'=' -f2)
@@ -16,7 +20,9 @@ if [[ -n "$TMUX_PANE" ]]; then
     fi
 
     # This while loop is used to check if the session has changed
-    while [[ "$is_session_visible" == "$(tmux display -p '#{session_attached}')" ]]; do
+    while [[ "$visible_session_name" == "$(tmux display-message -p '#S')" ]]; do
+        # TODO: Find the best way to update the file every seconds without it being too heavy.
+        # We only update the file when we switch session for the moment
         sleep 1
     done
 

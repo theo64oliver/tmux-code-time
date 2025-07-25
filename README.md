@@ -1,5 +1,10 @@
 # tmux-code-time
 
+
+## IMPORTANT:
+Add the following line to your `.tmux.conf` to make the pluggin active: `run-shell ~/Desktop/pers/tmux-code-time/code-time.tmux`
+
+
 ## Features
 
 - The purpose of this plugin is to show how long you worked on a project

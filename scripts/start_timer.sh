@@ -1,10 +1,30 @@
 #!/usr/bin/env bash
 
-storage_file="./tmux-timer.txt"
+seconds_to_readable() {
+    local total=$1
+    local days=$((total/86400))
+    local hours=$(( (total%86400)/3600 ))
+    local mins=$(( (total%3600)/60 ))
+    local secs=$((total%60))
+
+    if (( days > 0 )); then
+        printf "%dd %dh %dm %ds\n" $days $hours $mins $secs
+    elif (( hours > 0 )); then
+        printf "%dh %dm %ds\n" $hours $mins $secs
+    elif (( mins > 0 )); then
+        printf "%dm %ds\n" $mins $secs
+    else
+        printf "%ds\n" $secs
+    fi
+}
+
+path="$0"
+
+LOG_FILE="${path%/scripts/*}/tmux-code-time-debug.log"
+
+storage_file="${path%/scripts/*}/tmux-timer.txt"
 # Make sure the storage file exists
 touch "$storage_file"
-
-LOG_FILE="./tmux-code-time-debug.log"
 
 if [[ -n "$TMUX" ]]; then
 
@@ -13,7 +33,8 @@ if [[ -n "$TMUX" ]]; then
     visible_session_name=$(tmux display-message -p '#S')
 
     session_name=$(tmux display -p '#{session_name}')
-    SECONDS=$(grep "^$session_name=" "$storage_file" | cut -d'=' -f2)
+    INITIAL_SECONDS=$(grep "^$session_name=" "$storage_file" | cut -d'=' -f2)
+    SECONDS="$INITIAL_SECONDS"
 
     if [[ -z "$SECONDS" ]]; then
       SECONDS=0
@@ -24,15 +45,17 @@ if [[ -n "$TMUX" ]]; then
         # TODO: Find the best way to update the file every seconds without it being too heavy.
         # We only update the file when we switch session for the moment
         sleep 1
+
+        # Store the session name and the time in the storage file
+        if grep -q "^$session_name=" "$storage_file"; then
+          sed -i "s/^$session_name=.*/$session_name=$SECONDS/" "$storage_file"
+        else
+          echo "$session_name=$SECONDS" >> "$storage_file"
+fi
     done
 
-    # Store the session name and the time in the storage file
-    if grep -q "^$session_name=" "$storage_file"; then
-      sed -i "s/^$session_name=.*/$session_name=$SECONDS/" "$storage_file"
-    else
-      echo "$session_name=$SECONDS" >> "$storage_file"
-    fi
-
+    on_display="$(seconds_to_readable $((SECONDS-INITIAL_SECONDS)))"
+    echo "[$(date)] STOPPING TIMER for session $session_name, was on display for $on_display" >> "$LOG_FILE"
 fi
 
 let "hours=(SECONDS/3600)%24"
@@ -50,5 +73,3 @@ fi
 
 # Variable to make available
 echo "tmux-timer: $tmux_timer"
-
-

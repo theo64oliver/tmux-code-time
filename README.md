@@ -52,4 +52,44 @@ done < <(gdbus monitor -y -d org.freedesktop.login1)
 https://github.com/tmux-plugins/tpm/blob/master/docs/how_to_create_plugin.md
 https://github.com/tmux-plugins/tmux-example-plugin ++++++++++
 
+## Note for catppuccin users:
+
+An integration to catpuccin is currently under review, in the meantime, please follow the next steps:
+- Put the following lines in you `.tmux.conf`: 
+<details>
+<summary>🌻 Latte</summary>
+
+```set -g @catppuccin_status_project "#(/home/theo/Desktop/pers/tmux-code-time/scripts/project_time.sh)"
+set -g status-right "#[bg=#c6a0f6,fg=#181926]#[reverse]#[noreverse]⏲ "
+set -ag status-right "#[fg=#4c4f69,bg=#eff1f5] #{E:@catppuccin_status_project}"```
+
+</details>
+
+<details>
+<summary>🪴 Frappé</summary>
+
+
+```set -g @catppuccin_status_project "#(/home/theo/Desktop/pers/tmux-code-time/scripts/project_time.sh)"
+set -g status-right "#[bg=#c6a0f6,fg=#181926]#[reverse]#[noreverse]⏲ "
+set -ag status-right "#[fg=#c6d0f5,bg=#303446] #{E:@catppuccin_status_project}"```
+
+</details>
+
+<details>
+<summary>🌺 Macchiato</summary>
+
+```set -g @catppuccin_status_project "#(/home/theo/Desktop/pers/tmux-code-time/scripts/project_time.sh)"
+set -g status-right "#[bg=#c6a0f6,fg=#181926]#[reverse]#[noreverse]⏲ "
+set -ag status-right "#[fg=#cad3f5,bg=#24273a] #{E:@catppuccin_status_project}"```
+
+</details>
+
+<details>
+<summary>🌿 Mocha</summary>
+
+```set -g @catppuccin_status_project "#(/home/theo/Desktop/pers/tmux-code-time/scripts/project_time.sh)"
+set -g status-right "#[bg=#c6a0f6,fg=#181926]#[reverse]#[noreverse]⏲ "
+set -ag status-right "#[fg=#cdd6f4,bg=#1e1e2e] #{E:@catppuccin_status_project}"```
+
+</details>
 

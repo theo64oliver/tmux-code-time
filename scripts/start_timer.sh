@@ -1,30 +1,15 @@
 #!/usr/bin/env bash
 
-seconds_to_readable() {
-    local total=$1
-    local days=$((total/86400))
-    local hours=$(( (total%86400)/3600 ))
-    local mins=$(( (total%3600)/60 ))
-    local secs=$((total%60))
-
-    if (( days > 0 )); then
-        printf "%dd %dh %dm %ds\n" $days $hours $mins $secs
-    elif (( hours > 0 )); then
-        printf "%dh %dm %ds\n" $hours $mins $secs
-    elif (( mins > 0 )); then
-        printf "%dm %ds\n" $mins $secs
-    else
-        printf "%ds\n" $secs
-    fi
-}
-
 path="$0"
+CURRENT_DIR="${path%/scripts/*}/"
 
-LOG_FILE="${path%/scripts/*}/tmux-code-time-debug.log"
+LOG_FILE="$CURRENT_DIR"tmux-code-time-debug.log
 
-storage_file="${path%/scripts/*}/tmux-timer.txt"
+storage_file="$CURRENT_DIR"tmux-timer.txt
 # Make sure the storage file exists
 touch "$storage_file"
+
+source "$CURRENT_DIR/scripts/utilites.sh"
 
 if [[ -n "$TMUX" ]]; then
 

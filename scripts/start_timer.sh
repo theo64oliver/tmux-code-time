@@ -36,7 +36,7 @@ if [[ -n "$TMUX" ]]; then
           sed -i "s/^$session_name=.*/$session_name=$SECONDS/" "$storage_file"
         else
           echo "$session_name=$SECONDS" >> "$storage_file"
-fi
+    fi
     done
 
     on_display="$(seconds_to_readable $((SECONDS-INITIAL_SECONDS)))"

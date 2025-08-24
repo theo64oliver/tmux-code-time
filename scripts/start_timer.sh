@@ -42,19 +42,3 @@ if [[ -n "$TMUX" ]]; then
     on_display="$(seconds_to_readable $((SECONDS-INITIAL_SECONDS)))"
     echo "[$(date)] STOPPING TIMER for session $session_name, was on display for $on_display" >> "$LOG_FILE"
 fi
-
-let "hours=(SECONDS/3600)%24"
-let "minutes=(SECONDS%3600)/60"
-let "seconds=(SECONDS%3600)%60"
-
-# This code should be called at all time (to display it in the tmux status bar)
-if (( $SECONDS > 3600 )) ; then
-    tmux_timer="${hours}h ${minutes}m ${seconds}s"
-elif (( $SECONDS > 60 )) ; then
-    tmux_timer="${minutes}m ${seconds}s"
-else
-    tmux_timer="${SECONDS}s"
-fi
-
-# Variable to make available
-echo "tmux-timer: $tmux_timer"

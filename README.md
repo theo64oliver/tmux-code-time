@@ -11,11 +11,17 @@ This will be fixed in an upcomming release. To enjoy the pluggin at its best, pl
 
 ### Manual installation
 Clone the repo:
-```$ git clone https://github.com/theo64oliver/tmux-code-time ~/.tmux/plugins/tmux-code-time```
+```
+$ git clone https://github.com/theo64oliver/tmux-code-time ~/.tmux/plugins/tmux-code-time
+```
 Add the following line to your `.tmux.conf`: 
-```run-shell ~/.tmux/plugins/tmux-code-time/code-time.tmux```
+```
+run-shell ~/.tmux/plugins/tmux-code-time/code-time.tmux
+```
 Reload the tmux environment: 
-```$ tmux source-file ~/.tmux.conf```
+```
+$ tmux source-file ~/.tmux.conf
+```
 
 ## Integration in your tmux status bar:
 You can add the time spent in current session adding the following command to your `.tmux.conf` file:
